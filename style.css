@@ -52,7 +52,7 @@
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
-  background: var(--cream);
+  background: #1F0712;
   color: var(--text-dark);
   overflow-x: hidden;
   min-height: 100vh;
@@ -69,6 +69,8 @@ button { font-family: var(--font-body); }
   opacity: 0;
   transition: opacity 0.6s ease;
   overflow-y: auto;
+  z-index: 10;
+  background: transparent;
 }
 .screen.active {
   display: flex;
@@ -82,16 +84,35 @@ button { font-family: var(--font-body); }
   justify-content: flex-start !important;
 }
 
+/* ============================================================
+   CAMADA DE FUNDO (abaixo dos emojis)
+   ============================================================ */
+.screen-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: background-image 0.8s ease;
+}
+.screen-bg.active-countdown {
+  background: url('casasol.jpg') no-repeat center bottom / cover;
+}
+.screen-bg.active-login,
+.screen-bg.active-minigame {
+  background: url('sol2.jpg') no-repeat center bottom / cover;
+}
+
 
 /* ============================================================
    FLOATING HEARTS BACKGROUND
    ============================================================ */
 .hearts-bg {
+  display: none !important;
   position: fixed;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 5;
+  z-index: 2;
 }
 .fheart {
   position: absolute;
@@ -100,7 +121,6 @@ button { font-family: var(--font-body); }
   user-select: none;
   pointer-events: none;
   line-height: 1;
-  z-index: 1;
 }
 @keyframes fallDown {
   0%   { transform: translateY(0)      rotate(-15deg); opacity: 0;   }
@@ -114,15 +134,102 @@ button { font-family: var(--font-body); }
 /* ============================================================
    SCREEN 1 — COUNTDOWN
    ============================================================ */
-#screen-countdown {
-  background: linear-gradient(135deg, #FFD6E0 0%, #E8D5FF 35%, #D5EAFF 65%, #FFE8D5 100%);
-  background-size: 400% 400%;
-  animation: bgShift 14s ease infinite;
+/* ============================================================
+   COMETAS E ESTRELAS NO CÉU
+   ============================================================ */
+.shooting-stars-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
 }
-@keyframes bgShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+
+.star-streak {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 180, 200, 0.2) 35%, rgba(255, 255, 255, 0.8) 75%, #FFFFFF 100%);
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 14px #FF85A1);
+  opacity: 0;
+  animation: cometPass 4.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+.star-streak::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 10px #FFFFFF, 0 0 18px #FF85A1, 0 0 26px #FFFFFF;
+}
+
+/* Posições, inclinações e tamanhos variados */
+.star-streak.s1 { top: 8%;  left: 5%;  width: 150px; animation-delay: 0s;   animation-duration: 4.2s; }
+.star-streak.s2 { top: 18%; left: 40%; width: 120px; animation-delay: 1.5s; animation-duration: 3.6s; }
+.star-streak.s3 { top: 5%;  left: 60%; width: 180px; animation-delay: 3.0s; animation-duration: 5.0s; }
+.star-streak.s4 { top: 28%; left: 15%; width: 130px; animation-delay: 4.8s; animation-duration: 4.0s; }
+.star-streak.s5 { top: 12%; left: 70%; width: 160px; animation-delay: 6.2s; animation-duration: 4.6s; }
+
+@keyframes cometPass {
+  0% {
+    transform: translateX(-150px) translateY(-100px) rotate(32deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  28% {
+    transform: translateX(500px) translateY(320px) rotate(32deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(500px) translateY(320px) rotate(32deg);
+    opacity: 0;
+  }
+}
+
+/* Estrelinhas cintilantes delicadas no céu */
+.twinkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 5px #FFFFFF, 0 0 9px rgba(255, 179, 202, 0.7);
+  animation: pulseStar 2.5s ease-in-out infinite alternate;
+}
+
+/* Tamanhos, posições e ritmos de piscar variados */
+.twinkle.t1  { top: 12%; left: 8%;  width: 1.5px; height: 1.5px; animation-delay: 0.1s; animation-duration: 2.2s; }
+.twinkle.t2  { top: 24%; left: 75%; width: 2.5px; height: 2.5px; animation-delay: 1.4s; animation-duration: 3.1s; }
+.twinkle.t3  { top: 6%;  left: 38%; width: 2px;   height: 2px;   animation-delay: 0.7s; animation-duration: 2.8s; }
+.twinkle.t4  { top: 35%; left: 14%; width: 1.8px; height: 1.8px; animation-delay: 2.0s; animation-duration: 3.4s; }
+.twinkle.t5  { top: 18%; left: 88%; width: 3px;   height: 3px;   animation-delay: 1.1s; animation-duration: 2.5s; }
+.twinkle.t6  { top: 4%;  left: 80%; width: 2px;   height: 2px;   animation-delay: 2.7s; animation-duration: 3.8s; }
+.twinkle.t7  { top: 15%; left: 28%; width: 1.5px; height: 1.5px; animation-delay: 0.5s; animation-duration: 2.1s; }
+.twinkle.t8  { top: 30%; left: 62%; width: 2.2px; height: 2.2px; animation-delay: 1.9s; animation-duration: 3.2s; }
+.twinkle.t9  { top: 9%;  left: 92%; width: 2px;   height: 2px;   animation-delay: 3.1s; animation-duration: 2.6s; }
+.twinkle.t10 { top: 42%; left: 82%; width: 1.8px; height: 1.8px; animation-delay: 0.9s; animation-duration: 4.0s; }
+.twinkle.t11 { top: 22%; left: 19%; width: 2.5px; height: 2.5px; animation-delay: 2.4s; animation-duration: 2.7s; }
+.twinkle.t12 { top: 7%;  left: 55%; width: 1.5px; height: 1.5px; animation-delay: 1.6s; animation-duration: 3.5s; }
+.twinkle.t13 { top: 38%; left: 42%; width: 2px;   height: 2px;   animation-delay: 0.3s; animation-duration: 2.9s; }
+.twinkle.t14 { top: 16%; left: 48%; width: 2.8px; height: 2.8px; animation-delay: 2.8s; animation-duration: 3.3s; }
+.twinkle.t15 { top: 27%; left: 95%; width: 1.5px; height: 1.5px; animation-delay: 1.2s; animation-duration: 2.4s; }
+.twinkle.t16 { top: 3%;  left: 22%; width: 2.2px; height: 2.2px; animation-delay: 0.8s; animation-duration: 3.7s; }
+.twinkle.t17 { top: 33%; left: 30%; width: 1.8px; height: 1.8px; animation-delay: 2.1s; animation-duration: 2.3s; }
+.twinkle.t18 { top: 11%; left: 68%; width: 3px;   height: 3px;   animation-delay: 1.7s; animation-duration: 3.0s; }
+.twinkle.t19 { top: 40%; left: 5%;  width: 2px;   height: 2px;   animation-delay: 0.4s; animation-duration: 2.6s; }
+.twinkle.t20 { top: 26%; left: 45%; width: 1.5px; height: 1.5px; animation-delay: 2.5s; animation-duration: 3.9s; }
+
+@keyframes pulseStar {
+  0% { opacity: 0.15; transform: scale(0.7); }
+  50% { opacity: 0.95; transform: scale(1.25); }
+  100% { opacity: 0.3; transform: scale(0.85); }
 }
 
 .cd-wrap {
@@ -133,47 +240,55 @@ button { font-family: var(--font-body); }
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
 }
 
 .cd-eyebrow {
   font-family: var(--font-script);
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  color: var(--text-medium);
-  letter-spacing: 0.03em;
-  margin-bottom: 0.4rem;
+  font-size: clamp(1.4rem, 4vw, 2.3rem);
+  color: #380B1E;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.2rem;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.2);
   animation: fadeSlideDown 1s var(--ease) 0.3s both;
 }
 
 .cd-name {
   font-family: var(--font-title);
-  font-size: clamp(4.5rem, 14vw, 9rem);
+  font-size: clamp(5rem, 17vw, 10.5rem);
   font-weight: 700;
   font-style: italic;
-  line-height: 1;
-  margin-bottom: 0.6rem;
-  background: linear-gradient(135deg, #FF85A1 0%, #C9B8FF 55%, #FF85A1 100%);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  padding: 0 0.2em 0.15em 0.2em;
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  color: #FFFFFF;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFEBEF 50%, #F5C6D6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 16px rgba(255,133,161,0.25));
+  filter: drop-shadow(0 6px 20px rgba(60, 0, 25, 0.3));
   animation: fadeSlideDown 1s var(--ease) 0.55s both;
 }
 
 .cd-sub {
-  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-  color: var(--text-medium);
-  font-weight: 300;
-  max-width: 380px;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+  color: rgba(56, 11, 30, 0.8);
+  font-weight: 400;
+  max-width: 500px;
+  line-height: 1.5;
+  margin-bottom: 2.8rem;
   animation: fadeSlideDown 1s var(--ease) 0.75s both;
 }
 
 .cd-timer {
   display: flex;
   align-items: center;
-  gap: clamp(0.4rem, 2vw, 1rem);
-  margin-bottom: 2rem;
+  gap: clamp(0.6rem, 2.5vw, 1.4rem);
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
   justify-content: center;
   animation: fadeSlideUp 1s var(--ease) 0.95s both;
@@ -183,55 +298,55 @@ button { font-family: var(--font-body); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid var(--glass-border);
-  border-radius: var(--r-lg);
-  padding: clamp(0.9rem,3vw,1.4rem) clamp(1rem,3.5vw,1.8rem);
-  min-width: clamp(72px,16vw,100px);
+  justify-content: center;
+  background: #FFFFFF;
+  border-radius: 32px;
+  width: clamp(90px, 20vw, 135px);
+  height: clamp(95px, 21vw, 140px);
+  padding: 0.8rem;
   box-shadow:
-    0 8px 32px rgba(201,184,255,0.2),
-    0 2px 8px rgba(255,133,161,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    0 16px 45px rgba(60, 0, 25, 0.25),
+    0 4px 12px rgba(0, 0, 0, 0.08);
   transition: var(--trans);
 }
 .cd-block:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(201,184,255,0.3), 0 4px 12px rgba(255,133,161,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 55px rgba(60, 0, 25, 0.35);
 }
 
 .cd-block span {
   font-family: var(--font-title);
-  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
   font-weight: 700;
-  color: var(--text-dark);
+  color: #260513;
   line-height: 1;
   letter-spacing: -0.02em;
 }
 .cd-block label {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: clamp(0.55rem, 1.4vw, 0.68rem);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--text-light);
-  margin-top: 0.35rem;
+  color: #8A5F74;
+  margin-top: 0.5rem;
   font-weight: 700;
 }
 
 .cd-sep {
   font-family: var(--font-title);
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 1.2rem;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(60, 0, 25, 0.4);
+  margin-bottom: 0.8rem;
   animation: blink 1.2s ease infinite;
 }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
 .cd-date {
   font-family: var(--font-script);
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  color: var(--accent);
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  color: #380B1E;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.25);
   animation: fadeSlideUp 1s var(--ease) 1.15s both;
   letter-spacing: 0.02em;
 }
@@ -240,9 +355,7 @@ button { font-family: var(--font-body); }
    SCREEN 2 — LOGIN
    ============================================================ */
 #screen-login {
-  background: linear-gradient(135deg, #FFE8EF 0%, #EEE0FF 35%, #E0EEFF 65%, #FFEEE8 100%);
-  background-size: 400% 400%;
-  animation: bgShift 12s ease infinite;
+  /* background on .screen-bg.active-login */
 }
 
 .login-card {
@@ -361,9 +474,7 @@ button { font-family: var(--font-body); }
    SCREEN 3 — MAIN PAGE
    ============================================================ */
 #screen-main {
-  background: linear-gradient(135deg, #FFF0F5 0%, #F0E8FF 33%, #E8F4FF 66%, #FFF8F0 100%);
-  background-size: 400% 400%;
-  animation: bgShift 18s ease infinite;
+  /* background on .screen-bg.active-main */
   justify-content: flex-start !important;
   align-items: stretch !important;
 }
@@ -463,7 +574,7 @@ button { font-family: var(--font-body); }
 }
 
 /* Tab panels */
-.tab-content { flex: 1; }
+.tab-content { flex: 1; position: relative; z-index: 2; }
 .tab-panel { display: none; animation: fadeSlideUp 0.45s var(--ease) both; }
 .tab-panel.active { display: block; }
 
@@ -1005,4 +1116,249 @@ button { font-family: var(--font-body); }
 
 
 
+
+
+/* ============================================================
+   SCREEN 2.5 — MINIGAME
+   ============================================================ */
+#screen-minigame {
+  background: transparent;
+}
+
+.game-wrapper {
+  position: relative;
+  z-index: 6;
+  text-align: center;
+  animation: fadeSlideUp 0.9s var(--ease) both;
+}
+
+.game-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.game-instruction {
+  font-size: 1rem;
+  color: var(--text-medium);
+  margin-bottom: 2rem;
+}
+
+#game-board {
+  position: relative;
+  width: 600px;
+  max-width: 90vw;
+  height: 220px;
+  
+  /* Fundo da Cidade Pixel Art em Loop */
+  background-image: url('fundo_jogo.png');
+  background-size: auto 100%; /* Ajusta a altura da imagem para caber na caixa */
+  background-position: 0 100%;
+  background-repeat: repeat-x; /* Repete infinitamente para a direita/esquerda */
+  image-rendering: pixelated; /* Mantém a nitidez da pixel art */
+  
+  border: 2px solid rgba(200, 180, 255, 0.5); /* Borda um pouco mais roxa combinando com a noite */
+  border-bottom: 4px solid var(--purple);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.run-bg {
+  /* Animação do cenário rodando */
+  animation: moveGround 30s linear infinite;
+}
+
+@keyframes moveGround {
+  /* Move a imagem para trás. -1500px é um bom chute para a largura dela redimensionada */
+  from { background-position-x: 0px; }
+  to { background-position-x: -1500px; }
+}
+
+#game-score {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-body);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.pixel-art-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  /* Remover background cor sólida depois que colocar a imagem real */
+}
+
+#dino {
+  position: absolute;
+  width: 50px;
+  height: 90px;
+  bottom: 0;
+  left: 10%;
+  z-index: 2;
+  
+  /* Usa a primeira foto como padrão */
+  background-image: url('correndo1.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+}
+
+.jump {
+  /* Animação física do pulo */
+  animation: dinoJump 0.6s linear;
+}
+
+@keyframes dinoJump {
+  0% { bottom: 0; }
+  40% { bottom: 120px; }
+  50% { bottom: 130px; }
+  60% { bottom: 120px; }
+  100% { bottom: 0; }
+}
+
+#obstacle {
+  position: absolute;
+  width: 50px;
+  height: 80px;
+  bottom: 0;
+  right: -60px;
+  z-index: 1;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  image-rendering: pixelated;
+}
+
+.move-obstacle {
+  animation: obstacleMove 1.5s infinite linear;
+}
+
+@keyframes obstacleMove {
+  0% { right: -50px; }
+  100% { right: 100%; }
+}
+
+/* ============================================================
+   SCREEN 2.7 — VÍDEO
+   ============================================================ */
+#screen-video {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1050 40%, #1a0a2e 100%);
+  background-size: 400% 400%;
+  animation: bgShift 12s ease infinite;
+}
+
+.video-card {
+  position: relative;
+  z-index: 6;
+  background: var(--glass);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  width: min(580px, 92vw);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(201, 184, 255, 0.2);
+  animation: fadeSlideUp 0.9s var(--ease) both;
+}
+
+.video-trophy {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.video-title {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+  text-shadow: 0 0 20px rgba(201,184,255,0.6);
+}
+
+.video-subtitle {
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+}
+
+.video-container {
+  width: 100%;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  background: #000;
+  border: 2px solid rgba(200, 180, 255, 0.3);
+}
+
+.video-container video {
+  width: 100%;
+  display: block;
+  max-height: 320px;
+  object-fit: contain;
+  background: #000;
+}
+
+
+/* ============================================================
+   MINIGAME OVERLAYS
+   ============================================================ */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: #fff;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.game-overlay p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+  color: #fdfdfd;
+}
+
+.game-overlay h3 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: #ffb3c6;
+  margin-bottom: 1.5rem;
+}
+
+.game-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: var(--r-xl);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 133, 161, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 133, 161, 0.6);
+}
+
+.paused {
+  animation-play-state: paused !important;
+}
 

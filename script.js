@@ -6,13 +6,12 @@
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // CONFIGURAÃ‡ÃƒO
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const BIRTHDAY   = new Date('2026-08-24T00:00:00');
+let BIRTHDAY   = new Date('2026-08-24T00:00:00');
 const LOGIN_USER = 'Ally';
 const LOGIN_PASS = 'Presente';
 
-// ID do YouTube â€” Lugar Secreto (Gabriela Rocha)
-// Para trocar: substitua apenas o VIDEO_ID abaixo
-const YT_VIDEO_ID = 'rJOaLFiXcOY';
+// ID do YouTube — O Sol (Vitor Kley)
+const YT_VIDEO_ID = 'hQ6a5t00k8w';
 
 // Hearts as HTML entities — encoding-safe, no emoji corruption
 const HEART_ENTS = [
@@ -67,7 +66,46 @@ function switchScreen(fromId, toId, callback) {
   const to   = document.getElementById(toId);
   if (!from || !to) return;
 
-  // Fade out
+  const bgMap = {
+    'screen-countdown': 'active-countdown',
+    'screen-login':     'active-login',
+    'screen-minigame':  'active-minigame',
+    'screen-main':      'active-main'
+  };
+
+  // Transição deslizante exclusivamente da Parte 1 (Cronômetro) para a Parte 2 (Login)
+  if (fromId === 'screen-countdown' && toId === 'screen-login') {
+    const screenBg = document.getElementById('screen-bg');
+    if (screenBg && bgMap[toId]) {
+      screenBg.className = 'screen-bg ' + bgMap[toId];
+    }
+
+    from.style.transition = 'transform 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+    from.style.transform  = 'translateY(-100%)';
+
+    to.classList.add('active');
+    to.style.display    = 'flex';
+    to.style.transform  = 'translateY(100%)';
+    to.style.opacity    = '1';
+    to.style.transition = 'none';
+    void to.offsetHeight;
+
+    to.style.transition = 'transform 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+    to.style.transform  = 'translateY(0)';
+
+    setTimeout(() => {
+      from.classList.remove('active');
+      from.style.display    = 'none';
+      from.style.transform  = '';
+      from.style.transition = '';
+      to.style.transform    = '';
+      to.style.transition   = '';
+      if (callback) callback();
+    }, 950);
+    return;
+  }
+
+  // Fade out padrão para demais telas
   from.style.transition = 'opacity 0.5s ease';
   from.style.opacity    = '0';
 
@@ -77,13 +115,17 @@ function switchScreen(fromId, toId, callback) {
     from.classList.remove('active');
     from.style.display    = 'none';
 
-    // Prepare new screen hidden
+    const screenBg = document.getElementById('screen-bg');
+    if (screenBg && bgMap[toId]) {
+      screenBg.className = 'screen-bg ' + bgMap[toId];
+    }
+
     to.classList.add('active');
+    to.style.display    = 'flex';
     to.style.opacity    = '0';
     to.style.transition = 'none';
     void to.offsetHeight;
 
-    // Fade in
     to.style.transition = 'opacity 0.6s ease';
     to.style.opacity    = '1';
 
@@ -94,6 +136,8 @@ function switchScreen(fromId, toId, callback) {
     }, 630);
   }, 520);
 }
+
+
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TELA 1 â€” COUNTDOWN
@@ -132,7 +176,18 @@ function updateCountdown() {
   document.getElementById('cd-seconds').textContent = pad(seconds);
 }
 
+function triggerSecret1s() {
+  BIRTHDAY = new Date(Date.now() + 1000);
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
 function startCountdown() {
+  const trigger = document.getElementById('secret-trigger');
+  if (trigger) {
+    trigger.addEventListener('click', triggerSecret1s);
+  }
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
@@ -193,7 +248,7 @@ function initLoginBtn() {
     btn.innerHTML = '<span>Abrindo seu presente...</span> <span>ðŸŽ</span>';
     btn.disabled  = true;
     setTimeout(() => {
-      switchScreen('screen-login', 'screen-main', () => { startMusic(); showMusicBtn(); });
+      switchScreen('screen-login', 'screen-minigame', initMinigame);
     }, 800);
   });
 }
@@ -287,68 +342,56 @@ function initModals() {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MÃšSICA DE FUNDO â€” YouTube IFrame API
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-let ytPlayer  = null;
-let ytReady   = false;
-let ytPlaying = false;
-let ytPending = false; // true se o player estiver pronto mas a pÃ¡gina ainda nÃ£o abriu
+let isAudioPlaying = false;
 
-// Chamado automaticamente pelo YouTube API
-window.onYouTubeIframeAPIReady = function () {
-  ytPlayer = new YT.Player('yt-player', {
-    videoId:     YT_VIDEO_ID,
-    playerVars: {
-      autoplay:       1,
-      loop:           1,
-      playlist:       YT_VIDEO_ID,
-      controls:       0,
-      disablekb:      1,
-      fs:             0,
-      modestbranding: 1,
-      rel:            0,
-    },
-    events: {
-      onReady: function (e) {
-        ytReady = true;
-        e.target.setVolume(40);
-        if (ytPending) {
-          e.target.playVideo();
-          ytPlaying = true;
-          updateMusicBtn();
-        }
-      },
-      onStateChange: function (e) {
-        // Se o navegador bloqueou o autoplay, aguarda o usuÃ¡rio clicar
-        if (e.data === YT.PlayerState.PAUSED && ytPending) {
-          ytPlaying = false;
-          updateMusicBtn();
-        }
-        if (e.data === YT.PlayerState.PLAYING) {
-          ytPlaying = true;
-          updateMusicBtn();
-        }
-      }
-    }
-  });
-};
+function getAudioElement() {
+  return document.getElementById('bg-audio');
+}
 
 function startMusic() {
-  ytPending = true;
-  if (ytReady && ytPlayer) {
-    ytPlayer.playVideo();
-    ytPlaying = true;
-    updateMusicBtn();
+  const audio = getAudioElement();
+  if (!audio) return;
+  audio.volume = 0.5;
+
+  const tryPlay = () => {
+    if (isAudioPlaying) return;
+    audio.play().then(() => {
+      isAudioPlaying = true;
+      updateMusicBtn();
+      removeAutoListeners();
+    }).catch(() => {});
+  };
+
+  const removeAutoListeners = () => {
+    ['click', 'keydown', 'touchstart', 'pointerdown', 'mousemove', 'scroll'].forEach(evt => {
+      window.removeEventListener(evt, tryPlay);
+    });
+  };
+
+  // Tenta tocar imediatamente ao carregar
+  tryPlay();
+
+  // Se o navegador bloquear o toque direto sem gesto, qualquer movimento do mouse, toque ou rolagem ativa na hora!
+  if (!isAudioPlaying) {
+    ['click', 'keydown', 'touchstart', 'pointerdown', 'mousemove', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, tryPlay, { once: true, passive: true });
+    });
   }
-  // Se o player ainda nÃ£o estÃ¡ pronto, ytPending=true farÃ¡ ele tocar quando estiver
 }
 
 function toggleMusic() {
-  if (!ytPlayer || !ytReady) return;
-  if (ytPlaying) {
-    ytPlayer.pauseVideo();
-    ytPlaying = false;
+  const audio = getAudioElement();
+  if (!audio) return;
+
+  if (isAudioPlaying) {
+    audio.pause();
+    isAudioPlaying = false;
   } else {
-    ytPlayer.playVideo();
-    ytPlaying = true;
+    audio.volume = 0.5;
+    audio.play().then(() => {
+      isAudioPlaying = true;
+      updateMusicBtn();
+    }).catch(err => console.log('Erro ao tocar áudio:', err));
   }
   updateMusicBtn();
 }
@@ -357,14 +400,15 @@ function updateMusicBtn() {
   const btn  = document.getElementById('music-btn');
   const icon = document.getElementById('music-icon');
   if (!btn || !icon) return;
-  if (ytPlaying) {
+
+  if (isAudioPlaying) {
     btn.classList.add('playing');
-    icon.textContent  = 'ðŸŽµ';
-    btn.querySelector('.music-label').textContent = 'â™ª Pausar';
+    icon.textContent = '🎵';
+    btn.querySelector('.music-label').textContent = '♪ Pausar';
   } else {
     btn.classList.remove('playing');
-    icon.textContent  = 'â¸ï¸';
-    btn.querySelector('.music-label').textContent = 'â™ª Tocar';
+    icon.textContent = '▶️';
+    btn.querySelector('.music-label').textContent = '♪ Tocar';
   }
 }
 
@@ -405,6 +449,14 @@ function handleDevMode() {
       startMusic();
       showMusicBtn();
     });
+  } else if (target === 'game' || target === 'minigame') {
+    switchScreen('screen-countdown', 'screen-minigame', () => {
+      initMinigame();
+    });
+  } else if (target === 'video') {
+    switchScreen('screen-countdown', 'screen-video', () => {
+      initVideoScreen();
+    });
   } else {
     switchScreen('screen-countdown', 'screen-login', () => {
       setTimeout(startLoginAnimation, 500);
@@ -417,11 +469,13 @@ function handleDevMode() {
 // INIT
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
-  startHearts();
+  // startHearts();
   initLoginBtn();
   initTabs();
   initModals();
   initMusicBtn();
+  showMusicBtn();
+  startMusic();
   initTicker();
 
   if (!handleDevMode()) {
@@ -433,3 +487,264 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+// ────────────────────────────────────────────────────────────────
+// TELA 2.5 — MINIGAME (DINO RUN)
+// ────────────────────────────────────────────────────────────────
+let isJumping = false;
+let gameScore = 0;
+let gameInterval;
+let animInterval;
+let obstacleTimeout;
+const maxScore = 500;
+
+function initMinigame() {
+  const dino = document.getElementById('dino');
+  const obstacle = document.getElementById('obstacle');
+  const scoreVal = document.getElementById('score-val');
+  const gameBoard = document.getElementById('game-board');
+  const startOverlay = document.getElementById('game-start-overlay');
+  
+  // Limpar intervals de jogo anterior
+  clearInterval(gameInterval);
+  clearInterval(animInterval);
+  
+  // Pause/Reset
+  gameBoard.classList.remove('run-bg');
+  obstacle.classList.remove('move-obstacle');
+  obstacle.style.animationPlayState = '';
+  gameBoard.style.animationPlayState = '';
+  
+  // Reset
+  gameScore = 0;
+  isJumping = false;
+  scoreVal.textContent = '0';
+  dino.style.backgroundImage = `url('correndo1.png')`;
+  dino.classList.remove('jump');
+
+  // Mostrar overlay inicial
+  startOverlay.style.display = 'flex';
+}
+
+function startGameAction() {
+  document.getElementById('game-start-overlay').style.display = 'none';
+  document.getElementById('game-board').classList.add('run-bg');
+  
+  const minigameScreen = document.getElementById('screen-minigame');
+  document.addEventListener('keydown', handleJump);
+  minigameScreen.addEventListener('mousedown', handleJump);
+  minigameScreen.addEventListener('touchstart', handleJump, {passive: true});
+  
+  startGame();
+}
+
+function restartGameAction() {
+  clearInterval(gameInterval);
+  clearInterval(animInterval);
+
+  // Remove listeners antes de re-adicionar para evitar acúmulo
+  const minigameScreen = document.getElementById('screen-minigame');
+  document.removeEventListener('keydown', handleJump);
+  minigameScreen.removeEventListener('mousedown', handleJump);
+  minigameScreen.removeEventListener('touchstart', handleJump);
+  
+  document.getElementById('game-over-overlay').style.display = 'none';
+  const obstacle = document.getElementById('obstacle');
+  const gameBoard = document.getElementById('game-board');
+  
+  // Forçar o obstáculo a voltar e despausar
+  obstacle.classList.remove('move-obstacle');
+  obstacle.style.animationPlayState = '';
+  
+  // Resetar animação do fundo da cidade
+  gameBoard.style.animationPlayState = '';
+  gameBoard.classList.remove('run-bg');
+  
+  // Trigger reflow para aplicar o reset nas animações imediatamente
+  void obstacle.offsetWidth;
+  void gameBoard.offsetWidth;
+  
+  gameScore = 0;
+  isJumping = false;
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('dino').classList.remove('jump');
+  
+  startGameAction();
+}
+
+
+
+function startGame() {
+  const dino = document.getElementById('dino');
+  const obstacle = document.getElementById('obstacle');
+  const scoreVal = document.getElementById('score-val');
+
+  // Set random obstacle logic
+  const obstacleTypes = ['mulher1.png', 'mulher2.png', 'mulher3.png', 'emoji'];
+  function randomizeObstacle() {
+    const type = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+    if (type === 'emoji') {
+      obstacle.style.backgroundImage = 'none';
+      obstacle.innerHTML = '💔';
+      obstacle.style.display = 'flex';
+      obstacle.style.alignItems = 'center';
+      obstacle.style.justifyContent = 'center';
+      obstacle.style.fontSize = '40px'; 
+      obstacle.style.filter = 'drop-shadow(0 4px 10px rgba(255,0,0,0.3))';
+    } else {
+      obstacle.innerHTML = '';
+      obstacle.style.filter = 'none';
+      obstacle.style.backgroundImage = `url('${type}')`;
+    }
+  }
+  randomizeObstacle();
+  // Change image every time it loops
+  obstacle.addEventListener('animationiteration', randomizeObstacle);
+
+  // Start obstacle animation
+  obstacle.classList.add('move-obstacle');
+
+  // Start character running animation (5 frames)
+  let runFrame = 1;
+  animInterval = setInterval(() => {
+    if (!isJumping) {
+      runFrame++;
+      if (runFrame > 5) runFrame = 1;
+      dino.style.backgroundImage = `url('correndo${runFrame}.png')`;
+    }
+  }, 100); // 10 fps
+
+  
+  // Score and collision loop
+  gameInterval = setInterval(() => {
+    // Increment score
+    gameScore++;
+    scoreVal.textContent = gameScore;
+    
+    // Check win condition
+    if (gameScore >= maxScore) {
+      winGame();
+      return;
+    }
+    
+    // Check collision
+    const dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue('bottom'));
+    // Since we animated 'right', get left position to compare
+    const dinoRect = dino.getBoundingClientRect();
+    const obsRect = obstacle.getBoundingClientRect();
+    
+    // Simple AABB collision logic
+    const margin = 28; // Hitbox bem menor (mais fácil)
+    if (
+      obsRect.left < dinoRect.right - margin &&
+      obsRect.right > dinoRect.left + margin &&
+      obsRect.top < dinoRect.bottom - margin &&
+      obsRect.bottom > dinoRect.top + margin
+    ) {
+      // Collision!
+      gameOver();
+    }
+  }, 50); // Checks every 50ms (faster for score increment and collision)
+}
+
+function handleJump(e) {
+  if (e.code === 'Space' || e.type === 'mousedown' || e.type === 'touchstart') {
+    if (e.type === 'keydown') e.preventDefault(); // Stop spacebar scrolling
+    jump();
+  }
+}
+
+function jump() {
+  const dino = document.getElementById('dino');
+  if (isJumping) return;
+  
+  isJumping = true;
+  dino.classList.add('jump');
+  
+  setTimeout(() => {
+    dino.classList.remove('jump');
+    isJumping = false;
+  }, 600); // Must match CSS animation duration
+}
+
+function gameOver() {
+  clearInterval(gameInterval);
+  clearInterval(animInterval);
+  
+  const minigameScreen = document.getElementById('screen-minigame');
+  const obstacle = document.getElementById('obstacle');
+  const gameBoard = document.getElementById('game-board');
+  const dino = document.getElementById('dino');
+  
+  // Pause obstacle exactly where it hit
+  obstacle.style.animationPlayState = 'paused';
+  // Pause background
+  gameBoard.style.animationPlayState = 'paused';
+  
+  document.removeEventListener('keydown', handleJump);
+  minigameScreen.removeEventListener('mousedown', handleJump);
+  minigameScreen.removeEventListener('touchstart', handleJump);
+  
+  dino.style.backgroundImage = `url('correndo1.png')`;
+  
+  document.getElementById('game-over-overlay').style.display = 'flex';
+}
+
+function winGame() {
+  clearInterval(gameInterval);
+  clearInterval(animInterval);
+  const minigameScreen = document.getElementById('screen-minigame');
+  const obstacle = document.getElementById('obstacle');
+  const dino = document.getElementById('dino');
+  const gameBoard = document.getElementById('game-board');
+  
+  obstacle.classList.remove('move-obstacle');
+  gameBoard.style.animationPlayState = 'paused';
+  
+  document.removeEventListener('keydown', handleJump);
+  minigameScreen.removeEventListener('mousedown', handleJump);
+  minigameScreen.removeEventListener('touchstart', handleJump);
+  
+  // Stop character on the first frame
+  dino.style.backgroundImage = `url('correndo1.png')`;
+
+  
+  // Change instruction text temporarily
+  const inst = document.querySelector('.game-instruction');
+  if (inst) inst.innerHTML = '<b>Você conseguiu!</b> Abrindo seu presente...';
+  
+  setTimeout(() => {
+    switchScreen('screen-minigame', 'screen-video', initVideoScreen);
+  }, 1500);
+}
+
+// ────────────────────────────────────────────────────────────────
+// TELA 2.7 — VÍDEO
+// ────────────────────────────────────────────────────────────────
+function initVideoScreen() {
+  // Pausa a música de fundo para ouvir o áudio do vídeo da cena final
+  const audio = getAudioElement();
+  if (audio) audio.pause();
+  isAudioPlaying = false;
+  updateMusicBtn();
+
+  const videoEl = document.getElementById('reward-video');
+  if (videoEl) {
+    videoEl.currentTime = 0;
+    videoEl.play().catch(e => console.log('Autoplay preventido pelo navegador:', e));
+    videoEl.addEventListener('ended', finishVideoTransition);
+  }
+}
+
+function finishVideoTransition() {
+  // Check if we already transitioned
+  if (!document.getElementById('screen-video').classList.contains('active')) return;
+  
+  const videoEl = document.getElementById('reward-video');
+  if (videoEl) videoEl.pause();
+  
+  switchScreen('screen-video', 'screen-main', () => {
+    startMusic();
+    showMusicBtn();
+  });
+}

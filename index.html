@@ -11,9 +11,39 @@
 </head>
 <body>
 
-<!-- ================================================================
-     FLOATING HEARTS (global background)
-================================================================ -->
+<!-- Camada 1: Fundo animado -->
+<div id="screen-bg" class="screen-bg active-countdown" aria-hidden="true"></div>
+
+<!-- Camada 1.5: Cometas e Estrelas no Céu -->
+<div class="shooting-stars-bg" aria-hidden="true">
+  <div class="star-streak s1"></div>
+  <div class="star-streak s2"></div>
+  <div class="star-streak s3"></div>
+  <div class="star-streak s4"></div>
+  <div class="star-streak s5"></div>
+  <div class="twinkle t1"></div>
+  <div class="twinkle t2"></div>
+  <div class="twinkle t3"></div>
+  <div class="twinkle t4"></div>
+  <div class="twinkle t5"></div>
+  <div class="twinkle t6"></div>
+  <div class="twinkle t7"></div>
+  <div class="twinkle t8"></div>
+  <div class="twinkle t9"></div>
+  <div class="twinkle t10"></div>
+  <div class="twinkle t11"></div>
+  <div class="twinkle t12"></div>
+  <div class="twinkle t13"></div>
+  <div class="twinkle t14"></div>
+  <div class="twinkle t15"></div>
+  <div class="twinkle t16"></div>
+  <div class="twinkle t17"></div>
+  <div class="twinkle t18"></div>
+  <div class="twinkle t19"></div>
+  <div class="twinkle t20"></div>
+</div>
+
+<!-- Camada 2: Emojis caindo -->
 <div class="hearts-bg" id="hearts-bg" aria-hidden="true"></div>
 
 <!-- ================================================================
@@ -21,33 +51,33 @@
 ================================================================ -->
 <div id="screen-countdown" class="screen active" role="main" aria-label="Contagem regressiva">
   <div class="cd-wrap">
-    <p class="cd-eyebrow">algo especial está chegando para</p>
+    <p class="cd-eyebrow">algo especial está chegando <span id="secret-trigger" style="cursor: pointer;" title="Segredo: 1s">para</span></p>
     <h1 class="cd-name">Ally</h1>
-    <p class="cd-sub">Um presente feito com muito amor está quase aqui... 🌸</p>
+    <p class="cd-sub">Um presente feito com muito amor está quase aqui...</p>
 
     <div class="cd-timer" role="timer" aria-label="Tempo restante">
       <div class="cd-block">
         <span id="cd-days">00</span>
-        <label>dias</label>
+        <label>DIAS</label>
       </div>
       <span class="cd-sep" aria-hidden="true">:</span>
       <div class="cd-block">
         <span id="cd-hours">00</span>
-        <label>horas</label>
+        <label>HORAS</label>
       </div>
       <span class="cd-sep" aria-hidden="true">:</span>
       <div class="cd-block">
         <span id="cd-minutes">00</span>
-        <label>minutos</label>
+        <label>MINUTOS</label>
       </div>
       <span class="cd-sep" aria-hidden="true">:</span>
       <div class="cd-block">
         <span id="cd-seconds">00</span>
-        <label>segundos</label>
+        <label>SEGUNDOS</label>
       </div>
     </div>
 
-    <p class="cd-date">24 de Agosto 🎂</p>
+    <p class="cd-date">24 de Agosto</p>
   </div>
 </div>
 
@@ -93,6 +123,52 @@
       <span>Entrar</span>
       <span aria-hidden="true">✨</span>
     </button>
+  </div>
+</div>
+
+<!-- ================================================================
+     TELA 2.5 — MINIGAME
+================================================================ -->
+<div id="screen-minigame" class="screen" role="main" aria-label="Minigame">
+  <div class="game-wrapper">
+    <h2 class="game-title">Corra até o presente!</h2>
+    <p class="game-instruction">Toque na tela ou aperte <b>ESPAÇO</b> para pular.</p>
+    
+    <div id="game-board">
+      <div id="game-score">Pontos: <span id="score-val">0</span> / 500</div>
+      <!-- Arte do personagem controlada pelo CSS Sprites -->
+      <div id="dino" title="Seu amor correndo!"></div>
+      <!-- Obstáculos aleatórios (mulheres e corações) -->
+      <div id="obstacle"></div>
+      
+      <!-- Overlays do Jogo -->
+      <div id="game-start-overlay" class="game-overlay" style="display:none;">
+        <p><b>Como Jogar:</b><br>Pressione <b>ESPAÇO</b> ou toque na tela para pular.<br>Corra até chegar no presente!</p>
+        <button id="start-game-btn" class="game-btn" onclick="startGameAction()">Começar a Corrida!</button>
+      </div>
+      
+      <div id="game-over-overlay" class="game-overlay" style="display: none;">
+        <h3>Você perdeu o seu amor! 💔</h3>
+        <button id="restart-game-btn" class="game-btn" onclick="restartGameAction()">Tentar Novamente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     TELA 2.7 — VÍDEO RECOMPENSA
+================================================================ -->
+<div id="screen-video" class="screen" role="main" aria-label="Cutscene Final">
+  <div class="video-card">
+    <div class="video-trophy">🎮</div>
+    <h2 class="video-title">Você chegou lá! 🎁</h2>
+    <p class="video-subtitle">Uma cena especial para você...✨</p>
+    <div class="video-container">
+      <video id="reward-video" playsinline>
+        <source src="cenafinal.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos.
+      </video>
+    </div>
   </div>
 </div>
 
@@ -345,8 +421,6 @@
       </div>
     </section>
 
-    </section>
-
     <!-- ── ORAÇÃO TAB ── -->
     <section id="tab-oracao" class="tab-panel" role="tabpanel" aria-labelledby="tbtn-oracao">
       <div class="oracao-wrap">
@@ -511,17 +585,15 @@
 
 <script src="script.js"></script>
 
-<!-- Hidden YouTube Player -->
-<div id="yt-container" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
-  <div id="yt-player"></div>
-</div>
+<!-- Audio Player -->
+<audio id="bg-audio" src="musicasol.mp3" autoplay loop preload="auto"></audio>
 
 <!-- Floating Music Button -->
 <button
   id="music-btn"
   class="music-btn"
   aria-label="Tocar/pausar música"
-  title="Lugar Secreto — Gabriela Rocha"
+  title="O Sol — Vitor Kley"
 >
   <span class="music-icon" id="music-icon">🎵</span>
   <span class="music-label">♪ Música</span>
