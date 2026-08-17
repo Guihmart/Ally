@@ -176,18 +176,7 @@ function updateCountdown() {
   document.getElementById('cd-seconds').textContent = pad(seconds);
 }
 
-function triggerSecret1s() {
-  BIRTHDAY = new Date(Date.now() + 1000);
-  if (countdownInterval) clearInterval(countdownInterval);
-  updateCountdown();
-  countdownInterval = setInterval(updateCountdown, 1000);
-}
-
 function startCountdown() {
-  const trigger = document.getElementById('secret-trigger');
-  if (trigger) {
-    trigger.addEventListener('click', triggerSecret1s);
-  }
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
