@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@400;600;700&family=Lato:wght@300;400;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 /* ============================================================
    DESIGN SYSTEM — ALLY'S BIRTHDAY SITE 💕
@@ -98,7 +98,8 @@ button { font-family: var(--font-body); }
   background: url('casasol.jpg') no-repeat center bottom / cover;
 }
 .screen-bg.active-login,
-.screen-bg.active-minigame {
+.screen-bg.active-minigame,
+.screen-bg.active-video {
   background: url('sol2.jpg') no-repeat center bottom / cover;
 }
 
@@ -358,181 +359,444 @@ button { font-family: var(--font-body); }
   /* background on .screen-bg.active-login */
 }
 
-.login-card {
+.login-card-wide {
   position: relative;
   z-index: 6;
-  background: var(--glass);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 2px solid var(--glass-border);
-  border-radius: var(--r-xl);
-  padding: clamp(2rem,5vw,3.5rem) clamp(1.5rem,4vw,3rem);
-  width: min(420px, 92vw);
+  width: min(780px, 94vw);
+  background: #110710;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
   box-shadow:
-    0 30px 70px rgba(255,133,161,0.18),
-    0 8px 30px rgba(201,184,255,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.7);
+    0 25px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1.5px rgba(255, 133, 161, 0.15);
   animation: fadeSlideUp 0.9s var(--ease) both;
 }
 
-.login-head {
-  text-align: center;
-  margin-bottom: 2.2rem;
-}
-.login-icon-wrap {
-  display: inline-flex;
-  align-items: center;
+.login-form-side {
+  flex: 1.1;
+  padding: clamp(2rem, 5vw, 3.2rem) clamp(1.8rem, 4vw, 2.8rem);
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg,var(--rosé),var(--lavender));
-  border-radius: 50%;
-  font-size: 2.2rem;
-  margin-bottom: 1.2rem;
-  animation: iconFloat 3s ease-in-out infinite;
-  box-shadow: 0 8px 25px rgba(255,133,161,0.3);
+  position: relative;
+  z-index: 2;
+  background: #110710;
 }
-@keyframes iconFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
-.login-head h2 {
-  font-family: var(--font-title);
-  font-size: 1.85rem;
-  color: var(--text-dark);
-  margin-bottom: 0.3rem;
+.login-title {
+  font-family: var(--font-body);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.01em;
 }
-.login-head p {
-  font-family: var(--font-script);
-  font-size: 1.15rem;
-  color: var(--accent);
+
+.login-title .pink-dot {
+  color: #FF85A1;
+  font-weight: 900;
+  margin-left: 2px;
+}
+
+.login-sub {
+  font-size: 0.85rem;
+  color: #B59EAB;
+  margin-bottom: 1.8rem;
 }
 
 .inp-group {
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.1rem;
 }
+
 .inp-group label {
   display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-medium);
-  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #9E8996;
+  margin-bottom: 0.4rem;
+  text-transform: lowercase;
 }
+
 .inp-group input {
   width: 100%;
-  padding: 0.95rem 1.2rem;
-  background: rgba(255,255,255,0.65);
-  border: 2px solid rgba(255,133,161,0.25);
-  border-radius: var(--r-sm);
+  padding: 0.85rem 1rem;
+  background: #231422;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--text-dark);
+  font-size: 0.95rem;
+  color: #FFFFFF;
   outline: none;
   transition: var(--trans-fast);
-  letter-spacing: 0.02em;
 }
+
 .inp-group input:focus {
-  border-color: var(--accent);
-  background: rgba(255,255,255,0.85);
-  box-shadow: 0 0 0 4px rgba(255,133,161,0.12);
+  border-color: #FF85A1;
+  background: #2D1A2C;
+  box-shadow: 0 0 0 3px rgba(255, 133, 161, 0.2);
+}
+
+.login-link-right {
+  text-align: right;
+  margin-top: -0.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.login-link-right a,
+.login-link-bottom a {
+  font-size: 0.75rem;
+  color: #9E8996;
+  text-decoration: underline;
+  transition: var(--trans-fast);
+}
+
+.login-link-right a:hover,
+.login-link-bottom a:hover {
+  color: #FF85A1;
 }
 
 .login-btn {
   width: 100%;
-  padding: 1.05rem;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  padding: 0.85rem;
+  background: linear-gradient(90deg, #A855F7 0%, #EC4899 50%, #F43F5E 100%);
   border: none;
-  border-radius: var(--r-sm);
-  color: white;
-  font-size: 1rem;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   cursor: pointer;
   transition: var(--trans);
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-  box-shadow: 0 10px 30px rgba(255,133,161,0.4);
-  text-transform: uppercase;
 }
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .login-btn:not(:disabled):hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(255,133,161,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(236, 72, 153, 0.55);
 }
-.login-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
 .login-btn.glow {
   animation: btnGlow 1.6s ease infinite;
 }
 @keyframes btnGlow {
-  0%,100% { box-shadow: 0 10px 30px rgba(255,133,161,0.4); transform:scale(1); }
-  50%     { box-shadow: 0 16px 45px rgba(255,133,161,0.65); transform:scale(1.02); }
+  0%,100% { box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35); transform:scale(1); }
+  50%     { box-shadow: 0 10px 30px rgba(236, 72, 153, 0.65); transform:scale(1.02); }
+}
+
+.login-link-bottom {
+  text-align: center;
+  margin-top: 1.4rem;
+}
+
+.login-image-side {
+  flex: 0.9;
+  background: url('sol2.jpg') no-repeat center center / cover;
+  position: relative;
+  min-height: 380px;
+}
+
+.login-image-side::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #110710 0%, rgba(17, 7, 16, 0.35) 45%, transparent 100%);
+}
+
+@media (max-width: 680px) {
+  .login-card-wide {
+    flex-direction: column;
+    width: min(420px, 92vw);
+  }
+  .login-image-side {
+    height: 180px;
+    min-height: 180px;
+  }
+  .login-image-side::before {
+    background: linear-gradient(180deg, #110710 0%, rgba(17, 7, 16, 0.3) 45%, transparent 100%);
+  }
 }
 
 /* ============================================================
-   SCREEN 3 — MAIN PAGE
+   SCREEN 3 — MAIN PAGE (PARALLAX EXCLUSIVO POR SCROLL)
    ============================================================ */
 #screen-main {
-  /* background on .screen-bg.active-main */
-  justify-content: flex-start !important;
-  align-items: stretch !important;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #0d040c;
 }
 
-/* Header */
-.site-header {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(2.5rem,6vw,4rem) 1.5rem clamp(4rem,8vw,5.5rem);
-  text-align: center;
-  background: linear-gradient(145deg, #FFB3CA 0%, #C9B8FF 55%, #93C5FD 100%);
-  flex-shrink: 0;
-}
-.header-glitter {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.18) 1px, transparent 1px),
-    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.14) 1px, transparent 1px),
-    radial-gradient(circle at 50% 10%, rgba(255,255,255,0.1) 1px, transparent 1px);
-  background-size: 50px 50px, 80px 80px, 120px 120px;
+.fixed-16-9-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.header-emoji {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
-  display: block;
-  margin-bottom: 0.6rem;
-  animation: heartbeat 2s ease infinite;
-}
-@keyframes heartbeat {
-  0%,100%{transform:scale(1)} 14%{transform:scale(1.12)} 28%{transform:scale(1)} 42%{transform:scale(1.1)} 70%{transform:scale(1)}
-}
-.site-header h1 {
-  font-family: var(--font-title);
-  font-size: clamp(2rem, 6vw, 3.8rem);
-  color: white;
-  font-style: italic;
-  text-shadow: 0 3px 20px rgba(0,0,0,0.12);
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 1;
-}
-.site-header h1 em { font-style: normal; color: rgba(255,255,255,0.95); }
-.site-header .h-sub {
-  font-family: var(--font-script);
-  font-size: clamp(1rem, 3vw, 1.3rem);
-  color: rgba(255,255,255,0.9);
-  position: relative;
-  z-index: 1;
-}
-.header-wave {
+
+.fixed-16-9-bg img {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Força proporção 16:9 perfeita apenas no primeiro fundo (casa) para manter a arte intacta */
+@media (min-aspect-ratio: 16/9) {
+  #bg-layer-1 img { height: 56.25vw; }
+}
+@media (max-aspect-ratio: 16/9) {
+  #bg-layer-1 img { width: 177.77vh; }
+}
+
+/* O fundo 2 volta para 'cover' para preencher a tela inteira sem barras. 
+   Usamos 'object-position: center bottom' para ancorar a imagem pela base, garantindo que as montanhas e o chão fiquem visíveis, e apenas o céu vazio seja cortado caso a tela seja muito larga. */
+#bg-layer-2 {
+  background-color: #F8F4EB;
+}
+#bg-layer-2 img {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover; 
+  object-position: center bottom;
+}
+
+.scroll-track-text {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  height: 50px;
-  background: #FFFAF8;
-  clip-path: ellipse(70% 100% at 50% 100%);
+  height: 4000vh; /* Pista massiva: 50% é para o texto da carta em parallax! */
+}
+
+.arc-text-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  text-align: center;
+  will-change: transform;
+  pointer-events: none;
+  z-index: 10;
+  transform: translate(-50%, 200vh);
+}
+
+.arc-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: #3D1A2E; 
+  font-style: italic;
+  text-shadow: 0 2px 25px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.arc-title em {
+  font-style: normal;
+  color: #EC4899; 
+  font-weight: 700;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: initial;
+  text-shadow: 0 2px 15px rgba(255, 255, 255, 0.9);
+}
+
+.arc-sub {
+  font-family: var(--font-script);
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  color: #7A4860;
+  text-shadow: 0 2px 15px rgba(255, 255, 255, 0.9);
+}
+
+/* Container para as fotos subindo */
+.floating-photos-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5; 
+  overflow: hidden;
+}
+
+.floating-photo {
+  position: absolute;
+  top: 0; /* JS controlará o translateY */
+  border: 12px solid #FFFFFF;
+  border-bottom: 40px solid #FFFFFF; 
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  border-radius: 4px;
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* Card rosinha central - Totalmente Parallax e Suave */
+.fixed-center-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 150vh);
+  width: 100vw;
+  max-width: 1200px; /* Alargado para acomodar foto + texto lado a lado */
+  height: 90vh;
+  z-index: 15;
+  pointer-events: none; /* ESSENCIAL: Impede que o card "roube" o scroll do mouse no centro da tela */
+  
+  /* Fundo rosa: Muito transparente nas bordas, mas bem sólido/colorido no meio! */
+  background: linear-gradient(180deg, rgba(253, 233, 234, 0) 0%, rgba(255, 220, 230, 0.95) 50%, rgba(248, 200, 212, 0) 100%);
+  
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border-radius: 0;
+  box-shadow: none; 
+  
+  /* Degradê Horizontal mais curto nas bordas para não apagar o texto */
+  -webkit-mask-image: 
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-composite: source-in;
+
+  mask-image: 
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-composite: intersect;
+
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  overflow: hidden;
+}
+
+.pink-mask-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.pink-content {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  margin: 0 auto;
+  width: 75%; /* Mais estreito para garantir que o texto fique longe da borda transparente */
+  max-width: 900px;
+}
+
+/* Novo layout cinemático: Cada parte é uma tela cheia absoluta */
+.story-part {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  opacity: 0; /* JS vai controlar */
+  transform: translateY(50px);
+  will-change: opacity, transform;
+}
+
+.story-part.reverse {
+  flex-direction: row-reverse;
+}
+
+.story-photo-container {
+  flex: 0 0 auto;
+  width: 300px;
+  height: 380px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.story-photo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.story-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* Grand Finale - Cenário 9 */
+.finale-part {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.finale-text {
+  text-align: center;
+  max-width: 800px;
+  flex: none; /* Não tentar preencher espaço flex */
+  width: 100%;
+}
+
+/* TELA DE FIM */
+.the-end-screen {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: var(--rosé-deep); /* Cor do tema solicitada */
+  z-index: 999; /* Fica por cima de absolutamente tudo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.the-end-screen h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(5rem, 10vw, 10rem);
+  color: var(--text-dark);
+  text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.pink-greeting {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: #FF6389;
+  margin-bottom: 1.5rem;
+}
+
+.pink-text {
+  font-family: 'Lora', serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem); /* Aumentado um pouco para máxima clareza */
+  color: #3D1A2E;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  text-align: left; /* Left é muito mais bonito e orgânico para cartas que 'justify' */
+}
+
+.pink-signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  color: #FF6389;
+  text-align: right;
+  margin-top: 2rem;
 }
 
 /* Tab Nav */
@@ -1242,6 +1506,57 @@ button { font-family: var(--font-body); }
   animation: obstacleMove 1.5s infinite linear;
 }
 
+.skip-game-btn {
+  margin-top: 1.2rem;
+  background: rgba(17, 7, 16, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 133, 161, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--r-xl);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--trans);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.skip-game-btn:hover {
+  background: rgba(255, 133, 161, 0.15);
+  color: #FF85A1;
+  border-color: #FF85A1;
+  transform: translateY(-2px);
+}
+
+.overlay-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.skip-game-btn-overlay {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: var(--trans-fast);
+  margin-top: 0.2rem;
+}
+
+.skip-game-btn-overlay:hover {
+  color: #FF85A1;
+}
+
 @keyframes obstacleMove {
   0% { right: -50px; }
   100% { right: 100%; }
@@ -1250,62 +1565,74 @@ button { font-family: var(--font-body); }
 /* ============================================================
    SCREEN 2.7 — VÍDEO
    ============================================================ */
+/* ============================================================
+   SCREEN 2.7 — VÍDEO
+   ============================================================ */
 #screen-video {
-  background: linear-gradient(135deg, #1a0a2e 0%, #2d1050 40%, #1a0a2e 100%);
-  background-size: 400% 400%;
-  animation: bgShift 12s ease infinite;
+  background: transparent;
 }
 
-.video-card {
+.video-card-dark {
   position: relative;
   z-index: 6;
-  background: var(--glass);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 2px solid var(--glass-border);
-  border-radius: var(--r-xl);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  width: min(580px, 92vw);
+  background: #110710;
+  border-radius: 24px;
+  border: 1.5px solid rgba(255, 133, 161, 0.15);
+  padding: clamp(1.8rem, 4.5vw, 2.8rem);
+  width: min(620px, 94vw);
   text-align: center;
-  box-shadow: 0 20px 50px rgba(201, 184, 255, 0.2);
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 133, 161, 0.1);
   animation: fadeSlideUp 0.9s var(--ease) both;
 }
 
 .video-trophy {
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   animation: float 3s ease-in-out infinite;
 }
 
 .video-title {
-  font-family: var(--font-title);
-  font-size: 1.8rem;
-  color: #fff;
-  margin-bottom: 0.4rem;
-  text-shadow: 0 0 20px rgba(201,184,255,0.6);
+  font-family: var(--font-body);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.2rem;
+}
+
+.video-title .pink-dot {
+  color: #FF85A1;
+  font-weight: 900;
+  margin-left: 2px;
 }
 
 .video-subtitle {
-  color: rgba(255,255,255,0.75);
-  margin-bottom: 1.2rem;
-  font-size: 1rem;
+  color: #B59EAB;
+  margin-bottom: 1.4rem;
+  font-size: 0.9rem;
 }
 
 .video-container {
   width: 100%;
-  border-radius: var(--r-md);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.6);
   background: #000;
-  border: 2px solid rgba(200, 180, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 1.4rem;
 }
 
 .video-container video {
   width: 100%;
   display: block;
-  max-height: 320px;
+  max-height: 340px;
   object-fit: contain;
   background: #000;
+}
+
+.video-finish-btn {
+  margin-top: 0.4rem;
 }
 
 
@@ -1346,11 +1673,14 @@ button { font-family: var(--font-body); }
   border: none;
   padding: 0.8rem 2rem;
   border-radius: var(--r-xl);
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: var(--font-title);
+  font-size: 1.2rem;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(255, 133, 161, 0.4);
   transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 99999;
+  pointer-events: auto;
 }
 
 .game-btn:hover {

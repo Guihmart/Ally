@@ -6,7 +6,6 @@
   <title>Para Ally 💕 | 24 de Agosto</title>
   <meta name="description" content="Um presente especial feito com amor para o aniversário de Ally — cheio de fé, carinho e momentos que marcam." />
   <link rel="stylesheet" href="style.css" />
-  <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
@@ -85,44 +84,54 @@
      TELA 2 — LOGIN ANIMADO
 ================================================================ -->
 <div id="screen-login" class="screen" role="main" aria-label="Login">
-  <div class="login-card" role="form" aria-label="Formulário de acesso">
-    <div class="login-head">
-      <div class="login-icon-wrap" aria-hidden="true">🎁</div>
-      <h2>Seu presente está aqui</h2>
-      <p>Só pra você, Ally 💕</p>
+  <div class="login-card-wide" role="form" aria-label="Formulário de acesso">
+    <!-- Lado Esquerdo: Formulário -->
+    <div class="login-form-side">
+      <h2 class="login-title">Faça o seu login<span class="pink-dot">.</span></h2>
+      <p class="login-sub">Só pra você, Ally 💕</p>
+
+      <div class="inp-group">
+        <label for="login-user">usuário</label>
+        <input
+          type="text"
+          id="login-user"
+          autocomplete="off"
+          readonly
+          aria-label="Usuário"
+        />
+      </div>
+
+      <div class="inp-group">
+        <label for="login-pass">senha</label>
+        <input
+          type="password"
+          id="login-pass"
+          autocomplete="off"
+          readonly
+          aria-label="Senha"
+        />
+      </div>
+
+      <div class="login-link-right">
+        <a href="#" onclick="return false;">esqueci minha senha</a>
+      </div>
+
+      <button
+        id="login-btn"
+        class="login-btn"
+        disabled
+        aria-label="Entrar no site"
+      >
+        <span>Entrar</span>
+      </button>
+
+      <div class="login-link-bottom">
+        <a href="#" onclick="return false;">ainda não tenho uma conta</a>
+      </div>
     </div>
 
-    <div class="inp-group">
-      <label for="login-user">Usuário</label>
-      <input
-        type="text"
-        id="login-user"
-        autocomplete="off"
-        readonly
-        aria-label="Usuário"
-      />
-    </div>
-
-    <div class="inp-group">
-      <label for="login-pass">Senha</label>
-      <input
-        type="password"
-        id="login-pass"
-        autocomplete="off"
-        readonly
-        aria-label="Senha"
-      />
-    </div>
-
-    <button
-      id="login-btn"
-      class="login-btn"
-      disabled
-      aria-label="Entrar no site"
-    >
-      <span>Entrar</span>
-      <span aria-hidden="true">✨</span>
-    </button>
+    <!-- Lado Direito: Imagem sol2 com fusão suave -->
+    <div class="login-image-side" aria-hidden="true"></div>
   </div>
 </div>
 
@@ -149,9 +158,12 @@
       
       <div id="game-over-overlay" class="game-overlay" style="display: none;">
         <h3>Você perdeu o seu amor! 💔</h3>
-        <button id="restart-game-btn" class="game-btn" onclick="restartGameAction()">Tentar Novamente</button>
+        <div class="overlay-btn-group">
+          <button id="restart-game-btn" class="game-btn" onclick="restartGameAction()">Tentar Novamente</button>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -159,431 +171,138 @@
      TELA 2.7 — VÍDEO RECOMPENSA
 ================================================================ -->
 <div id="screen-video" class="screen" role="main" aria-label="Cutscene Final">
-  <div class="video-card">
-    <div class="video-trophy">🎮</div>
-    <h2 class="video-title">Você chegou lá! 🎁</h2>
-    <p class="video-subtitle">Uma cena especial para você...✨</p>
+  <div class="video-card-dark" role="region" aria-label="Recompensa final">
+    <div class="video-trophy" aria-hidden="true">🎮</div>
+    <h2 class="video-title">Você chegou lá! 🎁<span class="pink-dot">.</span></h2>
+    <p class="video-subtitle">Uma cena especial para você... ✨</p>
+
     <div class="video-container">
-      <video id="reward-video" playsinline>
+      <video id="reward-video" playsinline controls autoplay>
         <source src="cenafinal.mp4" type="video/mp4">
         Seu navegador não suporta vídeos.
       </video>
     </div>
+
+    <button id="finish-video-btn" class="login-btn video-finish-btn" onclick="initMainScreen()">
+      <span>Ver seu presente final</span>
+      <span aria-hidden="true">✨</span>
+    </button>
   </div>
 </div>
 
 <!-- ================================================================
-     TELA 3 — PÁGINA PRINCIPAL
+     TELA 3 — PÁGINA PRINCIPAL (PARALLAX SCROLL PINNED)
 ================================================================ -->
 <div id="screen-main" class="screen" role="main" aria-label="Página principal">
-
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="header-glitter" aria-hidden="true"></div>
-    <span class="header-emoji" aria-hidden="true">💕</span>
-    <h1>Feliz Aniversário, <em>Ally</em> 🎂</h1>
-    <p class="h-sub">24 de Agosto — Um dia tão especial quanto você</p>
-    <div class="header-wave" aria-hidden="true"></div>
-  </header>
-
-  <!-- Promises Ticker -->
-  <div class="promises-ticker" aria-label="Promessas bíblicas" role="marquee">
-    <div class="ticker-track" id="ticker-track">
-      <span class="tick-item"><em>Jer 29:11</em> — Porque eu sei os planos que tenho a vosso respeito: planos de paz e não de mal. ✨</span>
-      <span class="tick-item"><em>Sl 139:14</em> — Graças te dou porque me formaste de modo assombroso e maravilhoso. 🌸</span>
-      <span class="tick-item"><em>Is 43:1</em> — Não temas, pois te remi; chamei-te pelo teu nome, tu és meu. 💕</span>
-      <span class="tick-item"><em>Sf 3:17</em> — O Senhor teu Deus está no meio de ti como guerreiro poderoso; exultará por ti com alegria. 💜</span>
-      <span class="tick-item"><em>Fl 4:7</em> — A paz de Deus, que excede todo entendimento, guardará os vossos corações. 🕊️</span>
-      <span class="tick-item"><em>Rm 8:38-39</em> — Nem morte, nem vida nos poderá separar do amor de Deus. 💝</span>
-      <span class="tick-item"><em>Sl 23:1</em> — O Senhor é o meu pastor; nada me faltará. 🌿</span>
-    </div>
+  
+  <!-- Novo Fundo 2 que ficará por baixo, revelado no final -->
+  <div class="fixed-16-9-bg" id="bg-layer-2" style="z-index: 0;">
+    <img src="fundo2.jpg" alt="Fundo 2" />
   </div>
-  <nav class="tab-nav" role="navigation" aria-label="Navegação por abas">
-    <button class="tab-btn active" data-tab="home"    id="tbtn-home"    aria-controls="tab-home"    aria-selected="true">🏠 Início</button>
-    <button class="tab-btn"        data-tab="fe"      id="tbtn-fe"      aria-controls="tab-fe"      aria-selected="false">📖 Fé</button>
-    <button class="tab-btn"        data-tab="galeria" id="tbtn-galeria" aria-controls="tab-galeria" aria-selected="false">📸 Galeria</button>
-    <button class="tab-btn"        data-tab="carta"   id="tbtn-carta"   aria-controls="tab-carta"   aria-selected="false">💌 Carta</button>
-    <button class="tab-btn"        data-tab="oracao"  id="tbtn-oracao"  aria-controls="tab-oracao"  aria-selected="false">🙏 Oração</button>
-  </nav>
 
-  <!-- Tab content area -->
-  <div class="tab-content">
+  <!-- Fundo original 16:9 preso na tela -->
+  <div class="fixed-16-9-bg" id="bg-layer-1" style="z-index: 1; transition: transform 0.1s linear;">
+    <img src="casa3.jpeg" alt="Fundo 1" />
+  </div>
 
-    <!-- ── HOME TAB ── -->
-    <section id="tab-home" class="tab-panel active" role="tabpanel" aria-labelledby="tbtn-home">
-      <div class="home-wrap">
-
-        <!-- Versículo destaque -->
-        <div class="verse-banner">
-          <span class="ref">Jeremias 29:11</span>
-          <blockquote>
-            "Porque eu sei os planos que tenho a vosso respeito, diz o Senhor;
-            planos de paz, e não de mal, para vos dar um futuro e uma esperança."
-          </blockquote>
-        </div>
-
-        <!-- Mensagem pessoal -->
-        <div class="message-card">
-          <span class="top-emoji" aria-hidden="true">🌸</span>
-          <h3>Para você, Ally</h3>
-          <p>
-            Ally, existem pessoas que chegam na nossa vida e simplesmente a transformam.
-            Você é uma dessas pessoas — daquelas que carregam luz nos olhos, gentileza nas palavras
-            e uma fé que inspira tudo ao redor.
-          </p>
-          <p>
-            Neste dia tão especial, quero que você saiba que é amada, valorizada e admirada.
-            Não apenas por quem você é hoje, mas por quem você está se tornando —
-            uma mulher de Deus, cheia de propósito e beleza singular.
-          </p>
-          <p>
-            Que este aniversário seja o início de uma nova temporada repleta de bênçãos,
-            sonhos realizados e muito amor. Que Deus continue guiando cada passo seu
-            com graça, fidelidade e surpresas lindas.
-          </p>
-          <p>
-            Com todo o meu carinho, em cada palavra e em cada momento que compartilhamos —
-            feliz aniversário. 🎂
-          </p>
-          <p class="msg-signature">Com amor 💕</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ── FÉ TAB ── -->
-    <section id="tab-fe" class="tab-panel" role="tabpanel" aria-labelledby="tbtn-fe">
-      <div class="fe-wrap">
-        <div class="section-intro">
-          <h2>Palavras que Sustentam</h2>
-          <p>Toque em um cartão para descobrir o que Deus tem a dizer sobre este tema.</p>
-        </div>
-
-        <div class="cards-grid" role="list">
-
-          <!-- Cartão 1 -->
-          <div
-            class="bcard bcard-1"
-            id="bcard-sofremos"
-            role="listitem button"
-            tabindex="0"
-            aria-label="Abrir: Por que sofremos?"
-          >
-            <div class="bcard-inner">
-              <span class="bcard-icon" aria-hidden="true">💔</span>
-              <div class="bcard-text">
-                <h3>Por que sofremos?</h3>
-                <p>Encontrando sentido na dor</p>
-              </div>
-              <span class="bcard-arrow" aria-hidden="true">→</span>
-            </div>
-          </div>
-
-          <!-- Cartão 2 -->
-          <div
-            class="bcard bcard-2"
-            id="bcard-deus"
-            role="listitem button"
-            tabindex="0"
-            aria-label="Abrir: O que é Deus?"
-          >
-            <div class="bcard-inner">
-              <span class="bcard-icon" aria-hidden="true">✨</span>
-              <div class="bcard-text">
-                <h3>O que é Deus?</h3>
-                <p>Conhecendo o coração do Pai</p>
-              </div>
-              <span class="bcard-arrow" aria-hidden="true">→</span>
-            </div>
-          </div>
-
-          <!-- Cartão 3 -->
-          <div
-            class="bcard bcard-3"
-            id="bcard-luta"
-            role="listitem button"
-            tabindex="0"
-            aria-label="Abrir: Momentos de luta"
-          >
-            <div class="bcard-inner">
-              <span class="bcard-icon" aria-hidden="true">⚔️</span>
-              <div class="bcard-text">
-                <h3>Momentos de luta</h3>
-                <p>Fortaleza nas batalhas da vida</p>
-              </div>
-              <span class="bcard-arrow" aria-hidden="true">→</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ── GALERIA TAB ── -->
-    <section id="tab-galeria" class="tab-panel" role="tabpanel" aria-labelledby="tbtn-galeria">
-      <div class="galeria-wrap">
-        <div class="section-intro">
-          <h2>Nossa Galeria 📸</h2>
-          <p>Momentos que ficam guardados no coração</p>
-        </div>
-
-        <div class="photo-grid" role="list">
-          <div class="photo-ph" role="listitem" aria-label="Foto 1 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">📷</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-          <div class="photo-ph" role="listitem" aria-label="Foto 2 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">🌸</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-          <div class="photo-ph" role="listitem" aria-label="Foto 3 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">💕</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-          <div class="photo-ph" role="listitem" aria-label="Foto 4 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">✨</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-          <div class="photo-ph" role="listitem" aria-label="Foto 5 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">🎀</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-          <div class="photo-ph" role="listitem" aria-label="Foto 6 — em breve">
-            <div class="photo-ph-inner">
-              <span class="ph-icon" aria-hidden="true">💫</span>
-              <span class="ph-label">Em breve...</span>
-              <div class="ph-add-overlay"><span>💕 Foto</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── CARTA TAB ── -->
-    <section id="tab-carta" class="tab-panel" role="tabpanel" aria-labelledby="tbtn-carta">
-      <div class="carta-wrap">
-        <div class="carta-top">
-          <span class="env-icon" aria-hidden="true">💌</span>
-          <span class="env-caption">Uma carta especial para você</span>
-        </div>
-
-        <div class="letter-card">
-          <span class="letter-date">24 de Agosto de 2026</span>
-          <span class="letter-greeting">Querida Ally,</span>
-          <div class="letter-body">
-            <p>
-              Se você chegou até aqui, então esse dia finalmente chegou.
-              E eu estou feliz demais em saber que pude fazer parte deste dia
-              de uma forma tão especial.
-            </p>
-            <p>
-              Quero que você saiba algo: você é incrível. Não apenas pelas coisas que faz,
-              mas pela pessoa que você é — na sua fé, na sua delicadeza, na sua força
-              mesmo quando ninguém percebe o quanto você luta por dentro.
-            </p>
-            <p>
-              Deus não erra. E quando Ele te colocou aqui, neste mundo, neste momento,
-              foi com um propósito lindo e cheio de significado. Você não é um acidente —
-              você é uma obra de arte nas mãos d'Ele.
-            </p>
-            <p>
-              Neste aniversário, meu maior desejo é que você sinta, de verdade,
-              o quanto é amada. Por Deus, primeiro e acima de tudo.
-              E também por mim, do jeito mais sincero que existe.
-            </p>
-            <p>
-              Que os próximos anos da sua vida sejam repletos de graça, de leveza,
-              de realizações e de uma fé que cresce cada vez mais.
-              Você merece tudo de bom — e muito mais do que imagina.
-            </p>
-          </div>
-          <div class="letter-closing">
-            <span class="closing-phrase">Com todo o meu carinho e admiração,</span>
-            <span class="closing-name">Com amor 💕</span>
+  <!-- Card rosinha no final para a História em 8 Partes -->
+  <div class="fixed-center-card" id="pink-card">
+    <div class="pink-mask-area">
+      <div class="pink-content" id="story-container">
+        
+        <!-- Parte 1 -->
+        <div class="story-part">
+          <div class="story-photo-container"><img src="foto (1).jpeg" alt="Foto 1"></div>
+          <div class="story-text">
+            <div class="pink-greeting reveal-text">Para a minha gatona,</div>
+            <div class="pink-text reveal-text">Olá, minha gatona. Vim aqui, por meio desta carta em formato de site, para descrever o quanto você é especial e contar um pouco da nossa história sob a minha perspectiva.</div>
           </div>
         </div>
 
-      </div>
-    </section>
-
-    <!-- ── ORAÇÃO TAB ── -->
-    <section id="tab-oracao" class="tab-panel" role="tabpanel" aria-labelledby="tbtn-oracao">
-      <div class="oracao-wrap">
-
-        <div class="oracao-top">
-          <span class="oracao-icon" aria-hidden="true">🙏</span>
-          <h2>Uma Oração por Você</h2>
-          <p>Palavras enviadas ao céu neste dia especial</p>
-        </div>
-
-        <div class="oracao-card">
-          <div class="oracao-deco" aria-hidden="true">✝️</div>
-          <div class="oracao-text">
-            <p class="oracao-abertura">Senhor,</p>
-            <p>
-              Hoje, com gratidão transbordando no coração, trago diante de Ti o nome de Ally.
-              Obrigado por cada detalhe que compõe essa pessoa tão especial — a fé genuína que ela carrega,
-              a força silenciosa que demonstra nos momentos difíceis, e a luz que ela irradia
-              para todos ao redor.
-            </p>
-            <p>
-              Eu Te peço, Pai, que continues sendo o centro da vida dela.
-              Que ela jamais duvide do quanto é amada por Ti — com um amor que não conhece limites
-              e que não depende de circunstâncias ou de merecimento.
-            </p>
-            <p>
-              Nos momentos em que ela se sentir fraca, que ela encontre forças em Tua Palavra.
-              Nos dias de dúvida, que a paz que excede todo entendimento guarde o seu coração e a sua mente.
-              Nos dias de alegria, que ela sempre lembre de onde vêm todas as bênçãos.
-            </p>
-            <p>
-              Abençoa este novo ano de vida dela com graça, com propósito renovado
-              e com experiências que a aproximem ainda mais de Ti.
-              Que cada manhã seja um lembrete de que Tuas misericórdias se renovam a cada dia.
-            </p>
-            <p>
-              Cuida do coração dela com ternura, Senhor. Guia os seus passos.
-              E que em cada estação da sua vida — nas alegrias e nas lutas —
-              ela possa dizer com convicção: <em>"O Senhor é o meu pastor, nada me faltará."</em>
-            </p>
-            <p class="oracao-fechamento">Em nome de Jesus,<br/><strong>Amém. 🙏</strong></p>
+        <!-- Parte 2 (Reverso) -->
+        <div class="story-part reverse">
+          <div class="story-photo-container"><img src="foto (2).jpeg" alt="Foto 2"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Sabe, até hoje eu não sei dizer quem seguiu quem primeiro — já que eu tenho quase certeza de que você me seguiu no Instagram primeiro —, mas acredito que foi um movimento de Deus para que a gente se conhecesse. Eu oro todos os dias para que Ele nos mantenha unidos até o fim dos nossos dias.</div>
           </div>
         </div>
 
-      </div>
-    </section>
+        <!-- Parte 3 -->
+        <div class="story-part">
+          <div class="story-photo-container"><img src="foto (3).jpeg" alt="Foto 3"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Conforme o tempo foi passando, eu acompanhava suas publicações bíblicas, até que vi uma foto sua. Naquele momento, fiquei admirado com a menina mais bela que eu já tinha visto.</div>
+          </div>
+        </div>
 
-  </div><!-- /tab-content -->
-</div><!-- /screen-main -->
+        <!-- Parte 4 (Reverso) -->
+        <div class="story-part reverse">
+          <div class="story-photo-container"><img src="foto (4).jpeg" alt="Foto 4"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Na esperança de acontecer algo, curti sua foto. Não muito tempo depois, você curtiu a minha e pronto: lá estava o sinal de que eu precisava. Não perdi tempo e mandei mensagem, e essa foi a melhor decisão que eu já tomei.</div>
+          </div>
+        </div>
 
-<!-- ================================================================
-     MODAIS BÍBLICOS
-================================================================ -->
+        <!-- Parte 5 -->
+        <div class="story-part">
+          <div class="story-photo-container"><img src="foto (5).jpeg" alt="Foto 5" style="object-position: center 30%;"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Então, começou a rolar um bate-papo e eu fui gostando de você pouco a pouco, até chegar a um momento em que eu não sabia mais explicar o que estava sentindo. Sabe aquelas borboletas na barriga? Então, eu estava sentindo isso com você, Ally.</div>
+          </div>
+        </div>
 
-<!-- Modal: Por que sofremos? -->
-<div class="modal-bg" id="modal-sofremos" role="dialog" aria-modal="true" aria-label="Por que sofremos?">
-  <div class="modal-box">
-    <div class="modal-top pink">
-      <button class="modal-close-btn" data-close="modal-sofremos" aria-label="Fechar">✕</button>
-      <span class="m-icon" aria-hidden="true">💔</span>
-      <h2>Por que sofremos?</h2>
-    </div>
-    <div class="modal-body">
-      <div class="verse-block">
-        <span class="vref">Romanos 5:3-4</span>
-        <p>"E não somente isso, mas também nos gloriamos nas tribulações, sabendo que a tribulação produz paciência, e a paciência, a experiência, e a experiência, a esperança."</p>
-      </div>
-      <div class="verse-block">
-        <span class="vref">Tiago 1:2-4</span>
-        <p>"Meus irmãos, considerai como motivo de grande alegria quando enfrentardes provações de toda espécie, sabendo que a provação da vossa fé produz perseverança. E a perseverança deve ter sua obra completa, para que sejais maduros e íntegros, sem que vos falte coisa alguma."</p>
-      </div>
-      <div class="verse-block">
-        <span class="vref">2 Coríntios 4:17</span>
-        <p>"Porque a nossa leve e momentânea tribulação produz para nós um peso eterno de glória, acima de toda medida."</p>
-      </div>
-      <div class="m-section">
-        <h4>📖 Entendendo</h4>
-        <p>O sofrimento não é punição — é processo. Assim como o ouro passa pelo fogo para se tornar puro, Deus permite que passemos por provações para nos fortalecer, moldar e aproximar d'Ele. Nenhuma dor que você sente é invisível para Deus. Ele vê, cuida e está trabalhando mesmo quando você não consegue enxergar o resultado.</p>
-      </div>
-      <div class="m-section">
-        <h4>💡 Reflexão</h4>
-        <p>Os momentos mais difíceis da nossa vida frequentemente se tornam os mais transformadores. As cicatrizes que carregamos contam histórias de superação, fé e graça. Deus não desperdiça nenhuma de suas dores — Ele as transforma em testemunho.</p>
-      </div>
-      <div class="m-motivation">
-        <p>Ally, sua dor tem propósito. Deus está transformando cada lágrima em força, cada luta em testemunho. Você não está sozinha nessa jornada. 🌸</p>
+        <!-- Parte 6 (Reverso) -->
+        <div class="story-part reverse">
+          <div class="story-photo-container"><img src="foto (6).jpeg" alt="Foto 6"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Não sei como, mas eu comecei a te amar mesmo antes de te ver. Cada dia, cada chamada e cada ligação de vídeo me faziam ansiar mais e mais por ti.</div>
+          </div>
+        </div>
+
+        <!-- Parte 7 -->
+        <div class="story-part">
+          <div class="story-photo-container"><img src="foto (7).jpeg" alt="Foto 7"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">E pronto, aqui estou eu: apaixonado e amando uma mulher que eu nunca nem encontrei. Engraçado, né? Amar alguém sem nunca ter tocado, ou até mesmo visto pessoalmente. Mas eu quero continuar seguindo com isso, e todos os dias eu conto o tempo que falta para finalmente te conhecer, te encontrar e, por fim, segurar a sua mão pela primeira vez. Espero ansiosamente por esse dia.</div>
+          </div>
+        </div>
+
+        <!-- Parte 8 (Reverso) -->
+        <div class="story-part reverse">
+          <div class="story-photo-container"><img src="foto (8).jpeg" alt="Foto 8"></div>
+          <div class="story-text">
+            <div class="pink-text reveal-text">Ally, me perdoe por não estar aí com você, por não poder acompanhar de perto esse dia tão especial que é o seu aniversário. Porém, nos próximos aniversários, quero estar ao seu lado para que nós dois possamos comemorar juntos. Por meio desta carta, venho transmitir os meus sentimentos.</div>
+          </div>
+        </div>
+
+        <!-- Parte 9 (Grand Finale - Sem foto, apenas a assinatura centralizada) -->
+        <div class="story-part finale-part">
+          <div class="story-text finale-text">
+            <div class="pink-text reveal-text" style="text-align: center; font-weight: bold; color: #FF6389; font-size: 1.4em; margin-bottom: 2rem;">Ally, eu te amo, e lhe desejo, de todo o meu coração, um feliz aniversário!</div>
+            <div class="pink-signature reveal-text" style="text-align: center; margin-top: 0;">Do seu eterno admirador,<br>Gatinho</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal: O que é Deus? -->
-<div class="modal-bg" id="modal-deus" role="dialog" aria-modal="true" aria-label="O que é Deus?">
-  <div class="modal-box">
-    <div class="modal-top purple">
-      <button class="modal-close-btn" data-close="modal-deus" aria-label="Fechar">✕</button>
-      <span class="m-icon" aria-hidden="true">✨</span>
-      <h2>O que é Deus?</h2>
-    </div>
-    <div class="modal-body">
-      <div class="verse-block purple">
-        <span class="vref">1 João 4:8</span>
-        <p>"Aquele que não ama não conheceu a Deus, porque Deus é amor."</p>
-      </div>
-      <div class="verse-block purple">
-        <span class="vref">Salmo 23:1-3</span>
-        <p>"O Senhor é o meu pastor; nada me faltará. Ele me faz repousar em pastos verdejantes; leva-me para junto das águas tranquilas. Refrigera-me a alma e me guia pelas veredas da justiça, por amor do seu nome."</p>
-      </div>
-      <div class="verse-block purple">
-        <span class="vref">Isaías 40:28-29</span>
-        <p>"O Senhor é o Deus eterno, o Criador dos confins da terra. Ele não se cansa nem se fatiga; o seu entendimento é insondável. Dá força ao cansado e multiplica o vigor ao que não tem força."</p>
-      </div>
-      <div class="m-section purple">
-        <h4>📖 Entendendo</h4>
-        <p>Deus não é uma força distante ou um juiz à espreita de nossos erros. Ele é Pai, Pastor, Criador e — acima de tudo — Amor. Ele te conhece pelo nome, conta cada cabelo da sua cabeça, e te amou antes mesmo de você existir. Conhecer Deus é encontrar a fonte de toda paz, propósito e identidade verdadeira.</p>
-      </div>
-      <div class="m-section purple">
-        <h4>💡 Reflexão</h4>
-        <p>Quando a vida parecer caótica e incompreensível, lembre-se: você está nas mãos de um Deus que não se cansa, não erra e te ama com amor eterno e incondicional. Ele é o seu refúgio mais seguro, seu descanso mais profundo.</p>
-      </div>
-      <div class="m-motivation" style="background: linear-gradient(135deg,#C9B8FF,#A990FF);">
-        <p>Ally, você é filha do Rei do universo. Deus te vê, te conhece e te ama completamente — exatamente como você é. 💜</p>
-      </div>
+  <!-- Pista de rolagem para animar o texto e fotos -->
+  <div class="scroll-track-text">
+    <div class="arc-text-container" id="arc-text-container">
+      <h1 class="arc-title">Feliz Aniversário, <em>Ally</em></h1>
+      <p class="arc-sub">Curta o presente ✨</p>
     </div>
   </div>
-</div>
 
-<!-- Modal: Momentos de luta -->
-<div class="modal-bg" id="modal-luta" role="dialog" aria-modal="true" aria-label="Momentos de luta">
-  <div class="modal-box">
-    <div class="modal-top gold">
-      <button class="modal-close-btn" data-close="modal-luta" aria-label="Fechar">✕</button>
-      <span class="m-icon" aria-hidden="true">⚔️</span>
-      <h2>Momentos de luta</h2>
-    </div>
-    <div class="modal-body">
-      <div class="verse-block gold">
-        <span class="vref">Filipenses 4:13</span>
-        <p>"Posso tudo naquele que me fortalece."</p>
-      </div>
-      <div class="verse-block gold">
-        <span class="vref">Isaías 41:10</span>
-        <p>"Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus; eu te fortaleço, e te ajudo, e te sustento com a minha destra fiel."</p>
-      </div>
-      <div class="verse-block gold">
-        <span class="vref">Salmo 46:1</span>
-        <p>"Deus é o nosso refúgio e força, socorro bem presente nas tribulações."</p>
-      </div>
-      <div class="m-section gold">
-        <h4>📖 Entendendo</h4>
-        <p>As batalhas da vida são reais — emocionais, espirituais, relacionais. Mas o cristão não luta sozinho. Cada vez que você sente que não consegue mais, é exatamente aí que a força de Deus se manifesta com mais clareza. Ele não te deu espírito de fraqueza, mas de poder, amor e equilíbrio.</p>
-      </div>
-      <div class="m-section gold">
-        <h4>💡 Reflexão</h4>
-        <p>Não há batalha em sua vida que Deus não tenha visto e permitido com um propósito maior. Você foi equipada para superar isso. E quando suas forças acabarem, as forças d'Ele começam. Descanse nessa verdade e permita que Ele lute por você.</p>
-      </div>
-      <div class="m-motivation" style="background: linear-gradient(135deg,#F5E08E,#F0C44A);">
-        <p>Ally, você é mais forte do que imagina — porque Aquele que está em você é maior do que tudo que está contra você. ⚔️✨</p>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="script.js"></script>
+
+<!-- TELA FINAL "FIM" -->
+<div id="the-end-screen" class="the-end-screen">
+  <h1>Fim</h1>
+</div>
 
 <!-- Audio Player -->
 <audio id="bg-audio" src="musicasol.mp3" autoplay loop preload="auto"></audio>

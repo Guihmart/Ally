@@ -1,4 +1,4 @@
-/* ================================================================
+﻿/* ================================================================
    ALY'S BIRTHDAY SITE â€” script.js ðŸ’•
    Tela 1: Countdown â†’ Tela 2: Login animado â†’ Tela 3: Principal
 ================================================================ */
@@ -121,7 +121,8 @@ function switchScreen(fromId, toId, callback) {
     }
 
     to.classList.add('active');
-    to.style.display    = 'flex';
+    // screen-main é um scroll container, usa display:block
+    to.style.display    = (toId === 'screen-main') ? 'block' : 'flex';
     to.style.opacity    = '0';
     to.style.transition = 'none';
     void to.offsetHeight;
@@ -151,17 +152,41 @@ function updateCountdown() {
   const diff = BIRTHDAY - now;
 
   if (diff <= 0) {
-    // AniversÃ¡rio chegou!
     ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => {
       document.getElementById(id).textContent = '00';
     });
     clearInterval(countdownInterval);
-    // Vai para login apÃ³s 1.5s
+
+    // Aguarda 1s mostrando o zero, depois desliza para baixo revelando o login
     setTimeout(() => {
-      switchScreen('screen-countdown', 'screen-login', () => {
+      const from = document.getElementById('screen-countdown');
+      const to   = document.getElementById('screen-login');
+
+      to.classList.add('active');
+      to.style.display    = 'flex';
+      to.style.transform  = 'translateY(100%)';
+      to.style.opacity    = '1';
+      to.style.transition = 'none';
+      void to.offsetHeight;
+
+      from.style.transition = 'transform 1s cubic-bezier(0.65, 0, 0.35, 1)';
+      from.style.transform  = 'translateY(-100%)';
+      to.style.transition   = 'transform 1s cubic-bezier(0.65, 0, 0.35, 1)';
+      to.style.transform    = 'translateY(0)';
+
+      const screenBg = document.getElementById('screen-bg');
+      if (screenBg) screenBg.className = 'screen-bg active-login';
+
+      setTimeout(() => {
+        from.classList.remove('active');
+        from.style.display    = 'none';
+        from.style.transform  = '';
+        from.style.transition = '';
+        to.style.transform    = '';
+        to.style.transition   = '';
         setTimeout(startLoginAnimation, 700);
-      });
-    }, 1500);
+      }, 1050);
+    }, 1000);
     return;
   }
 
@@ -180,8 +205,6 @@ function startCountdown() {
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
-
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TELA 2 â€” LOGIN ANIMADO
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function typeInto(inputEl, text, msPerChar) {
@@ -437,6 +460,7 @@ function handleDevMode() {
     switchScreen('screen-countdown', 'screen-main', () => {
       startMusic();
       showMusicBtn();
+      initTextParallax();
     });
   } else if (target === 'game' || target === 'minigame') {
     switchScreen('screen-countdown', 'screen-minigame', () => {
@@ -707,6 +731,19 @@ function winGame() {
   }, 1500);
 }
 
+function skipMinigameAction() {
+  if (gameInterval) clearInterval(gameInterval);
+  if (animInterval) clearInterval(animInterval);
+  const minigameScreen = document.getElementById('screen-minigame');
+  if (minigameScreen) {
+    minigameScreen.removeEventListener('keydown', handleJump);
+    minigameScreen.removeEventListener('mousedown', handleJump);
+    minigameScreen.removeEventListener('touchstart', handleJump);
+  }
+  document.removeEventListener('keydown', handleJump);
+  switchScreen('screen-minigame', 'screen-video', initVideoScreen);
+}
+
 // ────────────────────────────────────────────────────────────────
 // TELA 2.7 — VÍDEO
 // ────────────────────────────────────────────────────────────────
@@ -725,15 +762,269 @@ function initVideoScreen() {
   }
 }
 
+function initMainScreen() {
+  const videoEl = document.getElementById('reward-video');
+  if (videoEl) videoEl.pause();
+
+  switchScreen('screen-video', 'screen-main', () => {
+    startMusic();
+    showMusicBtn();
+    initTextParallax();
+  });
+}
+
 function finishVideoTransition() {
   // Check if we already transitioned
   if (!document.getElementById('screen-video').classList.contains('active')) return;
   
-  const videoEl = document.getElementById('reward-video');
-  if (videoEl) videoEl.pause();
-  
-  switchScreen('screen-video', 'screen-main', () => {
-    startMusic();
-    showMusicBtn();
+  initMainScreen();
+}
+
+function initTextParallax() {
+  const mainScreen = document.getElementById('screen-main');
+  const textElem = document.getElementById('arc-text-container');
+  if (!mainScreen || !textElem) return;
+
+  // Cria container das fotos
+  let photosContainer = document.getElementById('floating-photos-container');
+  if (!photosContainer) {
+    photosContainer = document.createElement('div');
+    photosContainer.id = 'floating-photos-container';
+    photosContainer.className = 'floating-photos-container';
+    const textTrack = document.querySelector('.scroll-track-text');
+    mainScreen.insertBefore(photosContainer, textTrack);
+  } else {
+    photosContainer.innerHTML = ''; // Limpa se já existir
+  }
+
+  // Prepara as fotos (2 sets de 8, embaralhados, garantindo sem repetição seguida)
+  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+  let set1 = shuffle([1,2,3,4,5,6,7,8]);
+  let set2 = shuffle([1,2,3,4,5,6,7,8]);
+  if (set1[7] === set2[0]) {
+    set2.reverse();
+  }
+  const photoIndices = [...set1, ...set2];
+
+  // Gera os elementos no DOM
+  const photoElements = photoIndices.map((idx, i) => {
+    const el = document.createElement('img');
+    el.src = `foto (${idx}).jpeg`;
+    el.className = 'floating-photo';
+    photosContainer.appendChild(el);
+
+    // Configurações individuais
+    const left = 5 + Math.random() * 70; // 5vw a 75vw
+    const size = window.innerWidth > 768 ? (12 + Math.random() * 10) : (25 + Math.random() * 15);
+    const rot = -30 + Math.random() * 60; // rotação fixa por foto
+
+    el.style.left = `${left}vw`;
+    el.style.width = `${size}vw`;
+    // Começam escondidas
+    el.style.transform = `translateY(150vh) rotate(${rot}deg)`;
+
+    // Tempos de entrada (dentro da fase 2 do scroll)
+    const startP = (i / 16) * 0.7; // Distribui a largada das 16 fotos
+    const endP = startP + 0.3; // Cada foto leva 30% do tempo total para cruzar a tela
+
+    return { el, startP, endP, rot };
   });
+
+  let currentProgress = 0;
+  let targetProgress = 0;
+  let trackHeight = 1;
+  const updateTrackHeight = () => {
+    trackHeight = mainScreen.scrollHeight - mainScreen.clientHeight;
+    if (trackHeight <= 0) trackHeight = 1;
+  };
+  
+  mainScreen.addEventListener('scroll', () => {
+    targetProgress = mainScreen.scrollTop / trackHeight;
+    targetProgress = Math.max(0, Math.min(targetProgress, 1));
+  });
+
+  const render = () => {
+    currentProgress += (targetProgress - currentProgress) * 0.05;
+
+    if (mainScreen.classList.contains('active')) {
+      // Fase 1: Texto entra (0% a 10%)
+      let textEnterProgress = Math.min(currentProgress / 0.10, 1.0);
+      
+      // Fase 2: Fotos passam (10% a 40%)
+      let photosProgress = Math.max(0, Math.min((currentProgress - 0.10) / 0.30, 1.0));
+
+      // Fase 3: Texto sai (35% a 45%)
+      let textExitProgress = Math.max(0, Math.min((currentProgress - 0.35) / 0.10, 1.0));
+
+      // Fase 4: Fundo sai e Card entra (40% a 50%)
+      let bgExitProgress = Math.max(0, Math.min((currentProgress - 0.40) / 0.10, 1.0));
+
+      // Fase 5: Texto da Carta sobe (50% a 100%)
+      let letterProgress = Math.max(0, Math.min((currentProgress - 0.50) / 0.50, 1.0));
+
+      // --- ANIMAÇÃO DO TEXTO INICIAL ---
+      const startY = window.innerHeight * 0.8; 
+      const endY = 0; 
+      const currentY = startY + (endY - startY) * textEnterProgress;
+
+      const startX = -window.innerWidth * 0.6;
+      const endX = 0;
+      const linearX = startX + (endX - startX) * textEnterProgress;
+
+      const arcX = Math.sin(textEnterProgress * Math.PI) * (window.innerWidth * 0.2);
+      const arcY = Math.sin(textEnterProgress * Math.PI) * (-window.innerHeight * 0.6);
+      
+      let finalX = linearX + arcX;
+      let finalY = currentY + arcY;
+
+      finalY -= (window.innerHeight * 1.5) * textExitProgress;
+
+      const rot = -25 * (1 - textEnterProgress);
+      const scale = 0.6 + (0.4 * textEnterProgress);
+
+      textElem.style.transform = `translate(calc(-50% + ${finalX}px), calc(-50% + ${finalY}px)) rotate(${rot}deg) scale(${scale})`;
+
+      // --- ANIMAÇÃO DAS FOTOS ---
+      photoElements.forEach(p => {
+        if (photosProgress < p.startP) {
+          p.el.style.transform = `translateY(150vh) rotate(${p.rot}deg)`;
+        } else if (photosProgress > p.endP) {
+          p.el.style.transform = `translateY(-150vh) rotate(${p.rot}deg)`;
+        } else {
+          const localProgress = (photosProgress - p.startP) / (p.endP - p.startP);
+          const y = window.innerHeight * 1.5 - (window.innerHeight * 3 * localProgress);
+          p.el.style.transform = `translateY(${y}px) rotate(${p.rot}deg)`;
+        }
+      });
+
+      // --- ANIMAÇÃO DO FUNDO E DO CARD ---
+      const bgLayer1 = document.getElementById('bg-layer-1');
+      if (bgLayer1) {
+        bgLayer1.style.transform = `translate(-50%, calc(-50% - ${bgExitProgress * 120}vh))`;
+      }
+
+      const pinkCard = document.getElementById('pink-card');
+      if (pinkCard) {
+        const cardY = 150 - (150 * bgExitProgress);
+        pinkCard.style.transform = `translate(-50%, calc(-50% + ${cardY}vh))`;
+      }
+
+      // --- ANIMAÇÃO DA CARTA EM 8 PARTES + FINALE (CINEMÁTICA) ---
+      // Agora a história vai de 50% até 95% do scroll. Os 5% finais são a tela FIM.
+      let storyGlobalProgress = Math.max(0, Math.min((currentProgress - 0.50) / 0.45, 1.0));
+      
+      const parts = document.querySelectorAll('.story-part');
+      const numParts = parts.length;
+      
+      parts.forEach((part, index) => {
+        // Cada parte ganha 1/8 do tempo de scroll da Fase 5
+        const startP = index / numParts;
+        const endP = (index + 1) / numParts;
+        
+        if (storyGlobalProgress <= startP) {
+          // Antes de entrar: escondido
+          part.style.opacity = 0;
+          // Somente a primeira parte começa lá embaixo para fazer a entrada subindo
+          part.style.transform = index === 0 ? `translateY(${window.innerHeight * 0.4}px)` : `translateY(0px)`;
+        } else if (storyGlobalProgress >= endP) {
+          // Depois de sair: escondido
+          part.style.opacity = 0;
+          // Todas as partes terminam e somem no centro exato da tela
+          part.style.transform = `translateY(0px)`;
+        } else {
+          // Ativo! Calculamos o progresso local desta parte (de 0.0 a 1.0)
+          let localProgress = (storyGlobalProgress - startP) / (endP - startP);
+          
+          let opacity = 1;
+          let y = 0; // O padrão é não se mover (fixo no centro)
+          
+          // Fade In (de 0% a 10% do tempo desta parte)
+          // Fade In (de 0% a 25% do tempo desta parte - Bem mais lento e suave)
+          if (localProgress < 0.25) {
+            opacity = localProgress / 0.25;
+            // Somente a primeira foto tem a animação de subir de fora da tela
+            if (index === 0) {
+              y = (window.innerHeight * 0.4) * (1 - (localProgress / 0.25));
+            }
+          } 
+          // Fade Out (de 90% a 100% do tempo desta parte - isso cria a "Pausa" antes de sumir!)
+          else if (localProgress > 0.90) {
+            let exitP = (localProgress - 0.90) / 0.10;
+            opacity = 1 - exitP;
+            // Fade out acontece puramente por opacidade, com y = 0
+          }
+          
+          part.style.opacity = opacity;
+          part.style.transform = `translateY(${y}px)`;
+          
+          // Lógica Letra por Letra (Máquina de Escrever fluida com o scroll)
+          const spans = part.querySelectorAll('.reveal-text span');
+          const totalSpans = spans.length;
+          
+          if (totalSpans > 0) {
+            // As letras começam a surgir aos 20% (quase fim do fade) e terminam aos 70%.
+            // Isso dá mais tempo para a foto subir devagar antes da carta aparecer correndo.
+            let wordRevealProgress = Math.max(0, Math.min((localProgress - 0.20) / 0.50, 1.0));
+            let wordsToShow = Math.floor(wordRevealProgress * totalSpans);
+            
+            spans.forEach((span, i) => {
+               if (i < wordsToShow) {
+                 span.style.opacity = 1;
+                 span.style.transform = 'translateY(0)';
+               } else {
+                 span.style.opacity = 0;
+                 span.style.transform = 'translateY(10px)'; // Entra com um leve sobressalto
+               }
+            });
+          }
+        }
+      });
+      
+      // --- ANIMAÇÃO FINAL (TELA "FIM") ---
+      // A tela Fim aparece nos últimos 5% do scroll (de 0.95 a 1.0)
+      const endScreen = document.getElementById('the-end-screen');
+      if (endScreen) {
+        if (currentProgress > 0.95) {
+          let endP = (currentProgress - 0.95) / 0.05;
+          endScreen.style.opacity = endP;
+        } else {
+          endScreen.style.opacity = 0;
+        }
+      }
+    }
+
+    window.requestAnimationFrame(render);
+  };
+
+  updateTrackHeight();
+  window.addEventListener('resize', updateTrackHeight);
+  textElem.style.transform = `translate(-50%, ${window.innerHeight + 500}px)`;
+
+  // --- PREPARAÇÃO DO TEXTO LETRA POR LETRA ---
+  // Transforma cada palavra da carta em um <span> para que o JS possa revelar uma por uma
+  document.querySelectorAll('.story-part').forEach(part => {
+    const revealElements = part.querySelectorAll('.reveal-text');
+    revealElements.forEach(el => {
+      const text = el.innerText;
+      el.innerHTML = ''; // Limpa o elemento puro
+      
+      const words = text.split(/(\s+)/); // Divide preservando espaços
+      words.forEach(w => {
+        if (w.trim().length > 0) {
+           const span = document.createElement('span');
+           span.innerText = w;
+           span.style.opacity = '0';
+           span.style.display = 'inline-block';
+           span.style.transform = 'translateY(10px)';
+           span.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
+           el.appendChild(span);
+        } else {
+           el.appendChild(document.createTextNode(w));
+        }
+      });
+    });
+  });
+
+  // Inicia o motor
+  render();
 }
